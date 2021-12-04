@@ -235,4 +235,24 @@ final_bootstrap_results =
   merge(final_bootstrap_results, bootstrap_results2, by = "strap_number")
 ```
 
+## Plotting the Estimates
+```{r}
+log_b0_b1_plot = 
+final_bootstrap_results %>% 
+  ggplot(aes(x = log_b0_b1)) + 
+  geom_density() +
+  labs(
+   x = "Log of b0*b1 estimate distribution",
+   y = "Density")
+r_squared_plot =
+final_bootstrap_results %>% 
+  ggplot(aes(x = r.squared)) +
+  geom_density() +
+  labs(
+   x = "R-squared estimate distribution",
+   y = "Density")
+log_b0_b1_plot / r_squared_plot
+```
+From the plots above, we can see that the distribution of the $\hat{r}^{2}$ estimate and the distribution of the Estimated $\log(\hat{\beta}_{0} * \hat{\beta}_{1})$ follow roughly a normal distribution. The Estimated $\log(\hat{\beta}_{0} * \hat{\beta}_{1})$ distribution has a center around 2.02.The $\hat{r}^{2}$ Estimate distribution has a center around 0.915.
+
 
