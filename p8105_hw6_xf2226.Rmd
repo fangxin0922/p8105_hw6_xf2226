@@ -177,4 +177,19 @@ cv_df %>%
 
 According on the graphs, it appears that my model is the best, the second best is main model, then interaction model.
 
+# Question 2
+## Load weather Data
+```{r}
+weather_df = 
+  rnoaa::meteo_pull_monitors(
+    c("USW00094728"),
+    var = c("PRCP", "TMIN", "TMAX"), 
+    date_min = "2017-01-01",
+    date_max = "2017-12-31") %>%
+  mutate(
+    name = recode(id, USW00094728 = "CentralPark_NY"),
+    tmin = tmin / 10,
+    tmax = tmax / 10) %>%
+  dplyr::select(name, id, everything())
+```
 
