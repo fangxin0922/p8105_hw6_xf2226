@@ -193,3 +193,46 @@ weather_df =
   dplyr::select(name, id, everything())
 ```
 
+## Create Bootsrap samples
+```{r, creating bootstrap samples}
+set.seed(2110)
+boot_sample = function(df) {
+  sample_frac(df, replace = TRUE)
+}
+boot_straps = 
+  tibble(
+    strap_number = 1:5000,
+    strap_sample = rerun(5000, boot_sample(weather_df))
+  ) 
+```
+
+## Create Bootsrap results
+```{r, bootstrap results}
+bootstrap_results = 
+  boot_straps %>% 
+  mutate(
+    models = map(strap_sample, ~lm(tmax ~ tmin, data = .x)),
+    results = map(models, broom::tidy)) %>% 
+  dplyr::select(-strap_sample, -models) %>% 
+  unnest(results) 
+
+bootstrap_results2 = 
+  boot_straps %>% 
+  mutate(
+    models = map(strap_sample, ~lm(tmax ~ tmin, data = .x)),
+    results = map(models, broom::glance)) %>% 
+  dplyr::select(-strap_sample, -models) %>% 
+  unnest(results) %>% 
+  dplyr::select(strap_number, r.squared)
+
+final_bootstrap_results =
+  bootstrap_results %>% 
+    mutate(log_estimate = log(estimate)) %>% 
+    group_by(strap_number) %>% 
+    summarise(log_b0_b1 = sum(log_estimate)) 
+
+final_bootstrap_results = 
+  merge(final_bootstrap_results, bootstrap_results2, by = "strap_number")
+```
+
+
