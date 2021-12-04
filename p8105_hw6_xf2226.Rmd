@@ -177,7 +177,7 @@ cv_df %>%
 
 According on the graphs, it appears that my model is the best, the second best is main model, then interaction model.
 
-# Question 2
+# Q2
 ## Load weather Data
 ```{r}
 weather_df = 
@@ -253,6 +253,20 @@ final_bootstrap_results %>%
    y = "Density")
 log_b0_b1_plot / r_squared_plot
 ```
-From the plots above, we can see that the distribution of the $\hat{r}^{2}$ estimate and the distribution of the Estimated $\log(\hat{\beta}_{0} * \hat{\beta}_{1})$ follow roughly a normal distribution. The Estimated $\log(\hat{\beta}_{0} * \hat{\beta}_{1})$ distribution has a center around 2.02.The $\hat{r}^{2}$ Estimate distribution has a center around 0.915.
+From the plots above, we can see that the distribution of the $\hat{r}^{2}$ estimate and the distribution of the Estimated $\log(\hat{\beta}_{0} * \hat{\beta}_{1})$ follow roughly a normal distribution. The Estimated $\log(\hat{\beta}_{0} * \hat{\beta}_{1})$ distribution was centered around 2.02.The $\hat{r}^{2}$ Estimate distribution was centered around 0.915.
 
+## 95% CIs 
+```{r}
+ci_log_b0_b1 = 
+  final_bootstrap_results %>% 
+  summarize(
+    ci_lower = quantile(log_b0_b1, 0.025), 
+    ci_upper = quantile(log_b0_b1, 0.975))
+ci_r2 = 
+  final_bootstrap_results %>% 
+  summarize(
+    ci_lower = quantile(r.squared, 0.025), 
+    ci_upper = quantile(r.squared, 0.975))
+```
+The 95% confidence interval for $\hat{r}^{2}$ is `r pull(ci_r2, ci_lower)` to `r pull(ci_r2, ci_upper)`. And the 95% confidence interval for $\log(\hat{\beta}_{0} * \hat{\beta}_{1})$ is `r pull(ci_log_b0_b1, ci_lower)` to `r pull(ci_log_b0_b1, ci_upper)`
 
