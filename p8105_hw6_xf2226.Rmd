@@ -68,6 +68,21 @@ The significant predictors are babysex, bhead, blength, delwt, parity, mheight, 
 fit = lm(bwt ~ babysex + bhead + blength + delwt + momage + parity + gaweeks + mheight + mrace + ppwt + smoken, data = bt_df)
 ```
 
+## Plotting the final model
+```{r}
+bt_df %>% 
+  modelr::add_predictions(fit) %>% 
+  modelr::add_residuals(fit) %>% 
+  ggplot(aes(x = pred, y = resid)) + 
+  geom_point(alpha = .3) +
+    labs(
+    title = "Plot of Models Residuals against Fitted Values",
+    x = "Predicted Value",
+    y = "Residual"
+  )
+```
+
+
 
 
 
