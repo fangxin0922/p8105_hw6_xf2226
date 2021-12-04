@@ -9,6 +9,7 @@ library(modelr)
 library(mgcv)
 library(patchwork)
 library(knitr)
+library(MASS)
 
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 options(
@@ -42,11 +43,31 @@ bt_df =
 
 Based on a literature for the factors that underly birthweight, we might include: 
 
-* baby's sex - male babies are usually heavier
-* baby’s length at birth (centimeters) - taller baby may be heavier just because their height
-* baby’s head circumference at birth (centimeters) - babies with bigger head circumference may be heavier too
-* mother’s age at delivery (years) - younger mother may be able to give birth to heathier and heavier babied compared to mother over age 35.
-* gestational age in weeks - babies with longer gestational age may be heavier and heathier. 
+* babysex: baby's sex - male babies are usually heavier
+* blength: baby’s length at birth (centimeters) - taller baby may be heavier just because their height
+* bhead: baby’s head circumference at birth (centimeters) - babies with bigger head circumference may be heavier too
+* momage: mother’s age at delivery (years) - younger mother may be able to give birth to heathier and heavier babied compared to mother over age 35.
+* gaweeks: gestational age in weeks - babies with longer gestational age may be heavier and heathier. 
+
+```{r, my regression model based on literature}
+my_model = lm(bwt ~ babysex + gaweeks + blength + bhead + momage, data = bt_df) 
+summary(my_model)
+```
+All variables are significant. I will likely keep all variables in my final model. 
+
+Based on a data-driven model-building process
+```{r, my regression model based on data-driven process}
+full.model <- lm(bwt  ~., data = bt_df)
+step.model <- stepAIC(full.model, direction = "backward", 
+                      trace = FALSE)
+summary(step.model)
+```
+The significant predictors are babysex, bhead, blength, delwt, parity, mheight, mrace, ppwt, and smoken. A lot of these variable are also in the hypothesized structure driven model 
+
+```{r, my final model}
+fit = lm(bwt ~ babysex + bhead + blength + delwt + momage + parity + gaweeks + mheight + mrace + ppwt + smoken, data = bt_df)
+```
+
 
 
 
