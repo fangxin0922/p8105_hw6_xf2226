@@ -38,5 +38,19 @@ bt_df =
     malform = factor(malform, levels = c('0', '1'), labels = c("absent", "present")),
     frace = factor(frace, levels = c("1", "2", "3", "4", "8", "9"), labels = c("White", "Black", "Asian", "Puerto Rican", "Other", "Unknown")),
     mrace = factor(mrace, levels = c("1", "2", "3", "4", "8", "9"), labels = c("White", "Black", "Asian", "Puerto Rican", "Other", "Unknown")))
-  
 ```
+
+Based on a literature for the factors that underly birthweight, we might include: 
+
+* baby's sex - male babies are usually heavier
+* baby’s length at birth (centimeters) - taller baby may be heavier just because their height
+* baby’s head circumference at birth (centimeters) - babies with bigger head circumference may be heavier too
+* mother’s age at delivery (years) - younger mother may be able to give birth to heathier and heavier babied compared to mother over age 35.
+* gestational age in weeks - babies with longer gestational age may be heavier and heathier. 
+
+
+
+
+
+
+
