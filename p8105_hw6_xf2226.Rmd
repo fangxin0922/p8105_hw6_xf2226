@@ -118,5 +118,15 @@ model1 = lm(bwt ~ blength + gaweeks, data = train_df)
 model2 = lm(bwt ~ bhead + blength + babysex + bhead:blength + bhead:babysex + blength:babysex + bhead:blength:babysex, data = train_df)
 ```
 
- 
+## Compute and compare root mean squared errors (RMSEs).
+
+```{r}
+rmse(my_model, test_df)
+rmse(model1, test_df)
+rmse(model2, test_df)
+```
+The RMSEs suggest that my_model works the best.
+
+
+
 
