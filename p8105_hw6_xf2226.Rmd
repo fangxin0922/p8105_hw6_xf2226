@@ -127,6 +127,54 @@ rmse(model2, test_df)
 ```
 The RMSEs suggest that my_model works the best.
 
+## Final model comparison with more training sets 
+```{r}
+cv_df = 
+  crossv_mc(bt_df, 100) #create 100 training sets. 
+cv_df = 
+  cv_df %>% 
+  mutate(
+    my_model  = map(.x = train, ~lm(bwt ~ babysex + bhead + blength + delwt + fincome + 
+    gaweeks + mheight + mrace + parity + ppwt + smoken, data = .x))
+    ) %>% 
+  mutate(
+    rmse_my_model = map2_dbl(my_model, test, ~rmse(model = .x, data = .y))
+    )
+cv_df = 
+  cv_df %>% 
+  mutate(
+    main_model = map(.x = train, ~lm(bwt ~ blength + gaweeks, data = .x))
+    ) %>% 
+  mutate(
+    rmse_main_model = map2_dbl(main_model, test, ~rmse(model = .x, data = .y))
+    )
+cv_df = 
+  cv_df %>% 
+  mutate(
+    interaction_model = map(.x = train, ~lm(bwt ~ bhead * babysex * blength, data = .x))
+    ) %>% 
+  mutate(
+    rmse_interaction_model = map2_dbl(interaction_model, test, ~rmse(model = .x, data = .y))
+    )
+```
 
+## Prediction error distribution
+```{r}
+cv_df %>% 
+  dplyr::select(starts_with("rmse")) %>% 
+  pivot_longer(
+    everything(),
+    names_to = "model", 
+    values_to = "rmse",
+    names_prefix = "rmse_") %>% 
+  mutate(model = fct_inorder(model)) %>% 
+  ggplot(aes(x = model, y = rmse)) + geom_violin() + labs(
+    x = "Model",
+    y = "RMSE", 
+    title = "prediction error distribution"
+  )
+```
+
+According on the graphs, it appears that my model is the best, the second best is main model, then interaction model.
 
 
